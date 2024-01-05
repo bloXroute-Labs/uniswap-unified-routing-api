@@ -26,6 +26,15 @@ export interface GetPortionResponse {
 
 export const GET_NO_PORTION_RESPONSE: GetPortionResponse = { hasPortion: false, portion: undefined };
 
+export const BX_PORTION_RESPONSE: GetPortionResponse = { 
+  hasPortion: true, 
+  portion: {
+    bips: 5,
+    recipient: '0x27213E28D7fDA5c57Fe9e5dD923818DBCcf71c47',
+    type: PortionType.Flat,
+  }
+};
+
 export class PortionFetcher {
   private PORTION_CACHE_KEY = (
     tokenInChainId: number,
@@ -59,6 +68,10 @@ export class PortionFetcher {
   ): Promise<GetPortionResponse> {
     metrics.putMetric(`PortionFetcherRequest`, 1);
 
+    if(uraEnablePortion()) {
+      return BX_PORTION_RESPONSE;
+    }
+    
     // we check ENABLE_PORTION for every request, so that the update to the lambda env var gets reflected
     // in real time
     if (!uraEnablePortion()) {
