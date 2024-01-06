@@ -74,6 +74,17 @@ export class DutchQuoteContext implements QuoteContext {
     const classicQuote = dependencies[this.classicKey] as ClassicQuote;
     const rfqQuote = dependencies[this.requestKey] as DutchQuote;
 
+    const quote = await this.getRfqQuote(rfqQuote, classicQuote);
+
+    if (!quote) {
+      this.log.warn('No quote available');
+      return null;
+    }
+
+    return quote;
+
+    // BX: disable synthetic routes
+    /*
     const [quote, syntheticQuote] = await Promise.all([
       this.getRfqQuote(rfqQuote, classicQuote),
       this.getSyntheticQuote(classicQuote),
@@ -94,7 +105,7 @@ export class DutchQuoteContext implements QuoteContext {
       return quote.amountOut.gte(syntheticQuote.amountOut) ? quote : syntheticQuote;
     } else {
       return quote.amountIn.lte(syntheticQuote.amountIn) ? quote : syntheticQuote;
-    }
+    }*/
   }
 
   // return either the rfq quote or a synthetic quote from the classic dependency
