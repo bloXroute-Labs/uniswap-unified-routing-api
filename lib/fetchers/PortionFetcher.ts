@@ -26,6 +26,21 @@ export interface GetPortionResponse {
 
 export const GET_NO_PORTION_RESPONSE: GetPortionResponse = { hasPortion: false, portion: undefined };
 
+export const BX_PORTION_ADDRESSES = [
+  "eth", // ETH
+  "0x0000000000000000000000000000000000000000", // ETH
+  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC
+  "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // WETH
+  "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
+  "0x6b175474e89094c44da98b954eedeac495271d0f", // DAI
+  "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599", // WBTC
+  "0x1a7e4e63778b4f12a199c062f3efdd288afcbce8", // agEUR
+  "0x056fd409e1d7a124bd7017459dfea2f387b6d5cd", // GUSD
+  "0x5f98805a4e8be255a32880fdec7f6728c6568ba0", // LUSD
+  "0x1abaea1f7c830bd89acc67ec4af516284b1bc33c", // EUROC
+  "0x70e8de73ce538da2beed35d14187f6959a8eca96", // XSGD
+]
+
 export const BX_PORTION_RESPONSE: GetPortionResponse = { 
   hasPortion: true, 
   portion: {
@@ -69,7 +84,12 @@ export class PortionFetcher {
     metrics.putMetric(`PortionFetcherRequest`, 1);
 
     if(uraEnablePortion()) {
-      return BX_PORTION_RESPONSE;
+      if(BX_PORTION_ADDRESSES.includes(tokenInAddress.toLowerCase()) && 
+          BX_PORTION_ADDRESSES.includes(tokenOutAddress.toLowerCase())) {
+        return BX_PORTION_RESPONSE;
+      } 
+
+      return GET_NO_PORTION_RESPONSE;
     }
     
     // we check ENABLE_PORTION for every request, so that the update to the lambda env var gets reflected
