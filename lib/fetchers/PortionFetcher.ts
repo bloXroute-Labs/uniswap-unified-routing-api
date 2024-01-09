@@ -45,7 +45,7 @@ export const BX_PORTION_RESPONSE: GetPortionResponse = {
   hasPortion: true, 
   portion: {
     bips: 5,
-    recipient: '0x27213E28D7fDA5c57Fe9e5dD923818DBCcf71c47',
+    recipient: '0x9B7a71b41544eefd7Cad9716Bf5B0fD7023d0755',
     type: PortionType.Flat,
   }
 };
